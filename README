@@ -1,0 +1,31 @@
+FreeRTOS port for TI Evalbot board
+by Francesco Gugliuzza <jackthevendicator@gmail.com>
+
+Supported and tested:
+- clock from PLL or oscillator
+- overclock (to 100 MHz - change SYSCTL_SYSDIV_4 to SYSCTL_SYSDIV_2 in main.c)
+- full 96 KB of SRAM
+- OLED display
+- ethernet (default IP: 192.168.2.77)
+- raw LED access
+
+Supported but NOT tested yet (from TI libraries for the Evalbot):
+- audio DAC
+- I/O (cooked LED and pushbutton access)
+- motors
+- sensors (bump sensors and wheel encoders)
+- sound
+- wav decoding
+
+Not supported yet:
+- microSD
+- USB device/host
+- UART
+
+Requirements:
+- CodeSourcery Sourcery G++ Lite for ARM EABI
+- FreeRTOS tree (recommended version 7.0.1)
+
+Place files in a directory under FreeRTOS/Demo, change directory to RTOSDemo and compile using make.
+
+If you think you can help with the development, feel free to contact me.
