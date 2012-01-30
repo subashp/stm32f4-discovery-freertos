@@ -1,5 +1,5 @@
 #/*
-#    FreeRTOS V6.1.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+#    FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
 #
 #    ***************************************************************************
 #    *                                                                         *
@@ -64,18 +64,27 @@ RTOS_SOURCE_DIR=$(RTOS_ROOT)/Source
 DEMO_COMMON_DIR=$(RTOS_ROOT)/Demo/Common/Minimal
 DEMO_INCLUDE_DIR=$(RTOS_ROOT)/Demo/Common/include
 UIP_COMMON_DIR=$(RTOS_ROOT)/Demo/Common/ethernet/uIP/uip-1.0/uip
-#LUMINARY_DRIVER_DIR=$(RTOS_ROOT)/Common/drivers/Luminary
-#LUMINARY_DRIVER_DIR=$(RTOS_ROOT)/Common/drivers/Stellaris
-#LUMINARY_DRIVER_DIR=$(RTOS_ROOT)/Common/drivers/LuminaryMicro
+#STM32F4_DRIVER_DIR=$(RTOS_ROOT)/Common/drivers/ST
 
 SRC_DIR=./RTOSDemo
 
-LUMINARY_DRIVER_DIR=$(SRC_DIR)/driverlib
+CMSIS_DRIVER_DIR=./drivers/CMSIS/Include
+STM32F4_DISCOVERY_DRIVER_DIR=./drivers/ST/STM32F4_discovery
+STM32F4_DRIVER_DIR=./drivers/ST/STM32F4xx/Include
+STM32F4xx_StdPeriph_DRIVER_DIR=./drivers/ST/STM32F4xx_StdPeriph_Driver/Inc
 
+MCU = cortex-m4
 CC=arm-none-eabi-gcc
-OBJCOPY=arm-none-eabi-objcopy
-LDSCRIPT=$(SRC_DIR)/standalone.ld
+LD=arm-none-eabi-gcc
+AR=arm-none-eabi-ar
+AS=arm-none-eabi-as
+#CP=arm-none-eabi-objcopy
+#OD=arm-none-eabi-objdump
 
+OBJCOPY=arm-none-eabi-objcopy
+//LDSCRIPT=$(SRC_DIR)/standalone.ld
+//LDSCRIPT=$(SRC_DIR)/STM32F407xG.ld
+LDSCRIPT=$(SRC_DIR)/stm32_flash.ld
 # should use --gc-sections but the debugger does not seem to be able to cope with the option.
 LINKER_FLAGS=-nostartfiles -Xlinker -oRTOSDemo.axf -Xlinker -M -Xlinker -Map=rtosdemo.map -Xlinker --no-gc-sections
 
@@ -83,52 +92,44 @@ DEBUG=-g
 OPTIM=-O0
 
 
-CFLAGS=$(DEBUG) -I $(SRC_DIR) -I $(RTOS_SOURCE_DIR)/include -I $(RTOS_SOURCE_DIR)/portable/GCC/ARM_CM3 \
-		-I $(DEMO_INCLUDE_DIR) -D GCC_ARMCM3_LM3S9B92 -D inline= -mthumb -mcpu=cortex-m3 $(OPTIM) -T$(LDSCRIPT) \
-		-D PACK_STRUCT_END=__attribute\(\(packed\)\) -D ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\) -D sprintf=usprintf -D snprintf=usnprintf -D printf=uipprintf \
-		-I $(UIP_COMMON_DIR) -I $(SRC_DIR)/webserver -ffunction-sections -fdata-sections -I $(LUMINARY_DRIVER_DIR) \
-		-I $(SRC_DIR)/evalbot_drivers -I $(SRC_DIR)/ethernet \
+CFLAGS=$(DEBUG) \
+		-I $(SRC_DIR) -I $(RTOS_SOURCE_DIR)/include -I $(RTOS_SOURCE_DIR)/portable/GCC/ARM_CM3 \
+		-I $(DEMO_INCLUDE_DIR) \
+		-DUSE_STDPERIPH_DRIVER \
+		-D STM32F407VG \
+		-D inline= -mthumb \
+		-mcpu=$(MCU) $(OPTIM) -T$(LDSCRIPT) \
+		-D PACK_STRUCT_END=__attribute\(\(packed\)\)  \
+		-D ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\) \
+		-D sprintf=usprintf -D snprintf=usnprintf -D printf=uipprintf \
+		-I $(UIP_COMMON_DIR)  -ffunction-sections -fdata-sections -I $(STM32F4_DRIVER_DIR) -I $(STM32F4_DISCOVERY_DRIVER_DIR) \
+		-I $(STM32F4xx_StdPeriph_DRIVER_DIR)  -I $(CMSIS_DRIVER_DIR) \
 		-DTARGET_IS_TEMPEST_RB1
 
-SOURCE=	$(SRC_DIR)/main.c \
-		$(SRC_DIR)/timertest.c \
-		$(SRC_DIR)/ParTest/ParTest.c \
-		$(SRC_DIR)/evalbot_drivers/dac.c \
-		$(SRC_DIR)/evalbot_drivers/display96x16x1.c \
-		$(SRC_DIR)/evalbot_drivers/io.c \
-		$(SRC_DIR)/evalbot_drivers/motor.c \
-		$(SRC_DIR)/evalbot_drivers/sensors.c \
-		$(SRC_DIR)/evalbot_drivers/sound.c \
-		$(SRC_DIR)/evalbot_drivers/wav.c \
-		$(LUMINARY_DRIVER_DIR)/ustdlib.c \
-		$(DEMO_COMMON_DIR)/BlockQ.c \
-		$(DEMO_COMMON_DIR)/blocktim.c \
-		$(DEMO_COMMON_DIR)/death.c \
-		$(DEMO_COMMON_DIR)/integer.c \
-		$(DEMO_COMMON_DIR)/PollQ.c \
-		$(DEMO_COMMON_DIR)/semtest.c \
-		$(DEMO_COMMON_DIR)/GenQTest.c \
-		$(DEMO_COMMON_DIR)/QPeek.c \
-		$(DEMO_COMMON_DIR)/recmutex.c \
-		$(DEMO_COMMON_DIR)/IntQueue.c \
-		$(SRC_DIR)/IntQueueTimer.c \
-		$(SRC_DIR)/webserver/uIP_Task.c \
-		$(SRC_DIR)/webserver/emac.c \
-		$(SRC_DIR)/webserver/httpd.c \
-		$(SRC_DIR)/webserver/httpd-cgi.c \
-		$(SRC_DIR)/webserver/httpd-fs.c \
-		$(SRC_DIR)/webserver/http-strings.c \
-		$(UIP_COMMON_DIR)/uip_arp.c \
-		$(UIP_COMMON_DIR)/psock.c \
-		$(UIP_COMMON_DIR)/timer.c \
-		$(UIP_COMMON_DIR)/uip.c \
-		$(RTOS_SOURCE_DIR)/list.c \
+#		../../Utilities/STM32F4-Discovery/stm32f4_discovery_audio_codec.c 
+SOURCE=	$(SRC_DIR)/main.c $(SRC_DIR)/hw_config.c $(SRC_DIR)/system_stm32f4xx.c\
+		./drivers/ST/STM32F4_discovery/stm32f4_discovery.c \
+		./drivers/ST/STM32F4_discovery/stm32f4_discovery_lis302dl.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/misc.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_flash.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c \
+		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c $(RTOS_SOURCE_DIR)/list.c \
+		$(RTOS_SOURCE_DIR)/timers.c \
 		$(RTOS_SOURCE_DIR)/queue.c \
 		$(RTOS_SOURCE_DIR)/tasks.c \
 		$(RTOS_SOURCE_DIR)/portable/GCC/ARM_CM3/port.c \
 		$(RTOS_SOURCE_DIR)/portable/MemMang/heap_2.c
 
-LIBS= $(LUMINARY_DRIVER_DIR)/gcc/libdriver.a $(LUMINARY_DRIVER_DIR)/gcc/libgr.a
+LIBS= 
+#$(LUMINARY_DRIVER_DIR)/gcc/libdriver.a $(LUMINARY_DRIVER_DIR)/gcc/libgr.a
 
 OBJS = $(SOURCE:.c=.o)
 
@@ -137,18 +138,18 @@ all: RTOSDemo.bin
 RTOSDemo.bin : RTOSDemo.axf
 	$(OBJCOPY) RTOSDemo.axf -O binary RTOSDemo.bin
 
-RTOSDemo.axf : $(OBJS) $(SRC_DIR)/startup.o Makefile
-	$(CC) $(CFLAGS) $(OBJS) $(SRC_DIR)/startup.o $(LIBS) $(LINKER_FLAGS)
+RTOSDemo.axf : $(OBJS) $(SRC_DIR)/startup_stm32f4xx.o Makefile
+	$(CC) $(CFLAGS) $(OBJS) $(SRC_DIR)/startup_stm32f4xx.o $(LIBS) $(LINKER_FLAGS)
 
 $(OBJS) : %.o : %.c Makefile $(SRC_DIR)/FreeRTOSConfig.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-startup.o : $(SRC_DIR)/startup.c Makefile
-	$(CC) -c $(CFLAGS) -O1 $(SRC_DIR)/startup.c -o $(SRC_DIR)/startup.o
+startup_stm32f4xx.o : $(SRC_DIR)/startup_stm32f4xx.s Makefile
+	$(CC) -c $(CFLAGS) -O1 $(SRC_DIR)/startup_stm32f4xx.s -o $(SRC_DIR)/startup.o
 		
 clean :
 	touch Makefile
-	cs-rm -f $(OBJS) $(SRC_DIR)/startup.o rtosdemo.map RTOSDemo.axf $(SRC_DIR)/RTOSDemo.bin
+	cs-rm -f $(OBJS) $(SRC_DIR)/startup_stm32f4xx.o rtosdemo.map RTOSDemo.axf $(SRC_DIR)/RTOSDemo.bin
 	
 
 

@@ -54,7 +54,7 @@ xTaskHandle xLED_Tasks[4];
 xTaskHandle xMEMS_Task, xBALANCE_Task;
 
 /* variables used by tasks */
-
+volatile int32_t ITM_RxBuffer;
 /* initial arguments for vLEDTask task (which LED and what is the delay) */
 static const int LEDS[4][2] = {{LED3,DELAY*1},
 							   {LED4,DELAY*2},
