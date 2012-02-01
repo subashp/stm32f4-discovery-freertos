@@ -68,10 +68,10 @@ UIP_COMMON_DIR=$(RTOS_ROOT)/Demo/Common/ethernet/uIP/uip-1.0/uip
 
 SRC_DIR=./RTOSDemo
 
-CMSIS_DRIVER_DIR=./drivers/CMSIS/Include
-STM32F4_DISCOVERY_DRIVER_DIR=./drivers/ST/STM32F4_discovery
-STM32F4_DRIVER_DIR=./drivers/ST/STM32F4xx/Include
-STM32F4xx_StdPeriph_DRIVER_DIR=./drivers/ST/STM32F4xx_StdPeriph_Driver/Inc
+CMSIS_DRIVER_DIR=../MyARMLib/CMSIS/Include
+STM32F4_DISCOVERY_DRIVER_DIR=../MyARMLib/STM32/STM32F4_discovery
+STM32F4_DRIVER_DIR=../MyARMLib/STM32/STM32F4xx/Include
+STM32F4xx_StdPeriph_DRIVER_DIR=../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/Inc
 
 MCU = cortex-m4
 CC=arm-none-eabi-gcc
@@ -82,8 +82,8 @@ AS=arm-none-eabi-as
 #OD=arm-none-eabi-objdump
 
 OBJCOPY=arm-none-eabi-objcopy
-//LDSCRIPT=$(SRC_DIR)/standalone.ld
-//LDSCRIPT=$(SRC_DIR)/STM32F407xG.ld
+#LDSCRIPT=$(SRC_DIR)/standalone.ld
+#LDSCRIPT=$(SRC_DIR)/STM32F407xG.ld
 LDSCRIPT=$(SRC_DIR)/stm32_flash.ld
 # should use --gc-sections but the debugger does not seem to be able to cope with the option.
 LINKER_FLAGS=-nostartfiles -Xlinker -oRTOSDemo.axf -Xlinker -M -Xlinker -Map=rtosdemo.map -Xlinker --no-gc-sections
@@ -108,20 +108,21 @@ CFLAGS=$(DEBUG) \
 
 #		../../Utilities/STM32F4-Discovery/stm32f4_discovery_audio_codec.c 
 SOURCE=	$(SRC_DIR)/main.c $(SRC_DIR)/hw_config.c $(SRC_DIR)/system_stm32f4xx.c\
-		./drivers/ST/STM32F4_discovery/stm32f4_discovery.c \
-		./drivers/ST/STM32F4_discovery/stm32f4_discovery_lis302dl.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/misc.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_flash.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c \
-		./drivers/ST/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c $(RTOS_SOURCE_DIR)/list.c \
+		../MyARMLib/STM32/STM32F4_discovery/stm32f4_discovery.c \
+		../MyARMLib/STM32/STM32F4_discovery/stm32f4_discovery_lis302dl.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/misc.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_flash.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c \
+		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c \
+		$(RTOS_SOURCE_DIR)/list.c \
 		$(RTOS_SOURCE_DIR)/timers.c \
 		$(RTOS_SOURCE_DIR)/queue.c \
 		$(RTOS_SOURCE_DIR)/tasks.c \
