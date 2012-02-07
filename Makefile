@@ -58,7 +58,7 @@
 # * various Luminary Micro EKs.
 # *************************************************************************/
 
-RTOS_ROOT=d:/workspace/FreeRTOS
+RTOS_ROOT=../FreeRTOS
 
 RTOS_SOURCE_DIR=$(RTOS_ROOT)/Source
 DEMO_COMMON_DIR=$(RTOS_ROOT)/Demo/Common/Minimal
@@ -68,10 +68,10 @@ UIP_COMMON_DIR=$(RTOS_ROOT)/Demo/Common/ethernet/uIP/uip-1.0/uip
 
 SRC_DIR=./RTOSDemo
 
-CMSIS_DRIVER_DIR=../MyARMLib/CMSIS/Include
+CMSIS_DRIVER_DIR=../MyARMLib/CMSIS/include
 STM32F4_DISCOVERY_DRIVER_DIR=../MyARMLib/STM32/STM32F4_discovery
-STM32F4_DRIVER_DIR=../MyARMLib/STM32/STM32F4xx/Include
-STM32F4xx_StdPeriph_DRIVER_DIR=../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/Inc
+STM32F4_DRIVER_DIR=../MyARMLib/STM32/STM32F4xx/include
+STM32F4xx_StdPeriph_DRIVER_DIR=../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/inc
 
 MCU = cortex-m4
 CC=arm-none-eabi-gcc
@@ -107,7 +107,7 @@ CFLAGS=$(DEBUG) \
 		-DTARGET_IS_TEMPEST_RB1
 
 #		../../Utilities/STM32F4-Discovery/stm32f4_discovery_audio_codec.c 
-SOURCE=	$(SRC_DIR)/main.c $(SRC_DIR)/hw_config.c $(SRC_DIR)/system_stm32f4xx.c\
+SOURCE=	$(SRC_DIR)/main.c $(SRC_DIR)/hw_config.c $(SRC_DIR)/system_stm32f4xx.c \
 		../MyARMLib/STM32/STM32F4_discovery/stm32f4_discovery.c \
 		../MyARMLib/STM32/STM32F4_discovery/stm32f4_discovery_lis302dl.c \
 		../MyARMLib/STM32/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.c \
