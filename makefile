@@ -98,7 +98,7 @@
 	CHIP	= STM32F407VG
 
 #STARTUP = startup_stm32f10x_md.S
-STARTUP = startup_$(CHIP).S
+STARTUP = startup_$(CHIP)
 
 	RTOS_ROOT=../FreeRTOS
 	CMSIS_DRIVER_DIR=../MyARMLib/CMSIS/include
@@ -147,12 +147,12 @@ STARTUP = startup_$(CHIP).S
 	LD_SCRIPT	= $(SRCDIR)/$(CHIP).ld
 
 # scmRTOS dir
-	SCMDIR		= ../scmRTOS
-	COMMON		= ../SamplesCommon
+#	SCMDIR		= ../scmRTOS
+#	COMMON		= ../SamplesCommon
  
 # source directories (all *.c, *.cpp and *.s files included)
 	DIRS	:= $(SRCDIR)
-	DIRS	+= $(COMMON)
+#	DIRS	+= $(COMMON)
 	DIRS	+= $(RTOS_ROOT)/Source
 	DIRS	+= $(RTOS_ROOT)/Source/portable/GCC/ARM_CM3
 	DIRS	+= $(RTOS_ROOT)/Source/include
@@ -263,7 +263,7 @@ endif
 #openocd command-line
 
 # debug level (d0..d3)
-	oocd_params		= -d0
+	oocd_params		= -d3
 # interface and board/target settings (using the OOCD target-library here)
 #	oocd_params		+= -c "fast enable"
 	oocd_params		+= -f interface/arm-usb-ocd.cfg 
@@ -306,9 +306,9 @@ $(OK): $(ELF)
 	@$(SIZE) $(ELF)
 	@echo "Errors: none"
 
-$(AXF):	$(OBJS) makefile
+$(AXF):	$(OBJS) $(STARTUP).o makefile
 	@echo --- linking... axf
-	$(LD) $(OBJS) $(LIBS) $(LD_FLAGS) -o "$(AXF)"
+	$(LD) $(OBJS) $(STARTUP).o $(LIBS) $(LD_FLAGS) -o "$(AXF)"
 	
 $(ELF):	$(OBJS) makefile
 	@echo --- linking... 
@@ -343,6 +343,11 @@ $(OBJDIR)/%.o: %.c makefile
 $(OBJDIR)/%.o: %.S makefile
 	@echo --- assembling $<...
 	$(AS) -c $(AFLAGS) -o $@ $<
+
+$(OBJDIR)/%.o: %.s makefile
+	@echo --- assembling $<...
+	$(AS) -c $(AFLAGS) -o $@ $<
+	
 
 dirs: $(OBJDIR) $(EXEDIR) $(LSTDIR) $(BAKDIR)
 

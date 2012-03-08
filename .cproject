@@ -32,7 +32,7 @@
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.option.addtools.createlisting.896320982" name="Create Extended Listing" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.option.addtools.createlisting"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.option.addtools.printsize.2030645620" name="Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.option.addtools.printsize"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.GNU_ELF" id="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.platform.base.744762300" isAbstract="false" name="Linux Platform" osList="linux" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.platform.base"/>
-							<builder buildPath="${workspace_loc:/CORTEX_STM32F4-DISCOVERY/Debug}" enableAutoBuild="true" id="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.builder.base.1834501873" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="ARM Sourcery Linux GNU Make builder" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.builder.base"/>
+							<builder buildPath="${workspace_loc:/CORTEX_STM32F4-DISCOVERY/Debug}" enableAutoBuild="false" id="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.builder.base.1834501873" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="ARM Sourcery Linux GNU Make builder" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.builder.base"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.assembler.base.225587063" name="ARM Sourcery Linux GCC Assembler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.assembler.base">
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.assembler.base.input.1222322824" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.linux.assembler.base.input"/>
 							</tool>
@@ -114,20 +114,26 @@
 	<storageModule moduleId="refreshScope" versionNumber="1">
 		<resource resourceType="PROJECT" workspacePath="/CORTEX_STM32F4-DISCOVERY"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.1158882598;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.1158882598.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.release.829968644;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1347923641">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.1158882598;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.1158882598.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.release.1975750469;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.346604708">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.756004710;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.756004710.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.1034239035;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.2122917490">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.1158882598;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.1158882598.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.release.1975750469;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.346604708">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
+		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.756004710;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.756004710.;org.eclipse.cdt.cross.arm.gnu.sourcery.linux.c.compiler.base.974796295;org.eclipse.cdt.cross.arm.gnu.sourcery.linux.c.compiler.base.input.300681976">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.756004710;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.756004710.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.1311028316;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1403925284">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.756004710;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.756004710.;org.eclipse.cdt.cross.arm.gnu.sourcery.linux.assembler.base.225587063;org.eclipse.cdt.cross.arm.gnu.sourcery.linux.assembler.base.input.1222322824">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

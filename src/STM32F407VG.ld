@@ -1,146 +1,170 @@
 /*
-    ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,
-                 2011 Giovanni Di Sirio.
-
-    This file is part of ChibiOS/RT.
-
-    ChibiOS/RT is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 3 of the License, or
-    (at your option) any later version.
-
-    ChibiOS/RT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*****************************************************************************
+**
+**  File        : STM32F407VG.ld
+**
+**  Abstract    : Linker script for STM32F407VG Device with
+**                1024KByte FLASH, 128KByte RAM
+**
+**                Set heap size, stack size and stack location according
+**                to application requirements.
+**
+**                Set memory bank area and size if external memory is used.
+**
+**  Target      : STMicroelectronics STM32
+**
+**  Environment : Atollic TrueSTUDIO(R)
+**
+**  Distribution: The file is distributed as is, without any warranty
+**                of any kind.
+**
+**  (c)Copyright Atollic AB.
+**  You may use this file as-is or modify it according to the needs of your
+**  project. Distribution of this file (unmodified or modified) is not
+**  permitted. Atollic AB permit registered Atollic TrueSTUDIO(R) users the
+**  rights to distribute the assembled, compiled & linked contents of this
+**  file as part of an application binary file, provided that it is built
+**  using the Atollic TrueSTUDIO(R) toolchain.
+**
+*****************************************************************************
 */
 
-/*
- * ST32F407xG memory setup.
- */
-__main_stack_size__     = 0x0400;
-__process_stack_size__  = 0x0400;
+/* Entry Point */
+ENTRY(Reset_Handler)
 
+/* Highest address of the user mode stack */
+_estack = 0x20020000;    /* end of 128K RAM */
+
+/* Generate a link error if heap and stack don't fit into RAM */
+_Min_Heap_Size = 0;      /* required amount of heap  */
+_Min_Stack_Size = 0x400; /* required amount of stack */
+
+/* Specify the memory areas */
 MEMORY
 {
-    flash : org = 0x08000000, len = 1M
-    ram : org = 0x20000000, len = 112k
-    ethram : org = 0x2001C000, len = 16k
-    ccmram : org = 0x10000000, len = 64k
+  FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 1024K
+  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 128K
+  MEMORY_B1 (rx)  : ORIGIN = 0x60000000, LENGTH = 0K
 }
 
-__ram_start__           = ORIGIN(ram);
-__ram_size__            = LENGTH(ram);
-__ram_end__             = __ram_start__ + __ram_size__;
-
+/* Define output sections */
 SECTIONS
 {
-    . = 0;
-    _text = .;
+  /* The startup code goes first into FLASH */
+  .isr_vector :
+  {
+    . = ALIGN(4);
+    KEEP(*(.isr_vector)) /* Startup code */
+    . = ALIGN(4);
+  } >FLASH
 
-    startup : ALIGN(16) SUBALIGN(16)
-    {
-        KEEP(*(vectors))
-    } > flash
+  /* The program code and other data goes into FLASH */
+  .text :
+  {
+    . = ALIGN(4);
+    *(.text)           /* .text sections (code) */
+    *(.text*)          /* .text* sections (code) */
+    *(.rodata)         /* .rodata sections (constants, strings, etc.) */
+    *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
+    *(.glue_7)         /* glue arm to thumb code */
+    *(.glue_7t)        /* glue thumb to arm code */
+    *(.eh_frame)
 
-    constructors : ALIGN(4) SUBALIGN(4)
-    {
-        PROVIDE(__init_array_start = .);
-        KEEP(*(SORT(.init_array.*)))
-        KEEP(*(.init_array))
-        PROVIDE(__init_array_end = .);
-    } > flash
-
-    destructors : ALIGN(4) SUBALIGN(4)
-    {
-        PROVIDE(__fini_array_start = .);
-        KEEP(*(.fini_array))
-        KEEP(*(SORT(.fini_array.*)))
-        PROVIDE(__fini_array_end = .);
-    } > flash
-
-    .text : ALIGN(16) SUBALIGN(16)
-    {
-        *(.text.startup.*)
-        *(.text)
-        *(.text.*)
-        *(.rodata)
-        *(.rodata.*)
-        *(.glue_7t)
-        *(.glue_7)
-        *(.gcc*)
-    } > flash
-
-    .ARM.extab :
-    {
-        *(.ARM.extab* .gnu.linkonce.armextab.*)
-    } > flash
-
-    .ARM.exidx : {
-        PROVIDE(__exidx_start = .);
-        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-        PROVIDE(__exidx_end = .);
-     } > flash
-
-    .eh_frame_hdr :
-    {
-        *(.eh_frame_hdr)
-    } > flash
-
-    .eh_frame : ONLY_IF_RO
-    {
-        *(.eh_frame)
-    } > flash
+    KEEP (*(.init))
+    KEEP (*(.fini))
 
     . = ALIGN(4);
-    _etext = .;
-    _textdata = _etext;
+    _etext = .;        /* define a global symbols at end of code */
+  } >FLASH
 
-    .stacks :
-    {
-        . = ALIGN(8);
-        __main_stack_base__ = .;
-        . += __main_stack_size__;
-        . = ALIGN(8);
-        __main_stack_end__ = .;
-        __process_stack_base__ = .;
-        __main_thread_stack_base__ = .;
-        . += __process_stack_size__;
-        . = ALIGN(8);
-        __process_stack_end__ = .;
-        __main_thread_stack_end__ = .;
-    } > ram
 
-    .data :
-    {
-        PROVIDE(_data = .);
-        *(.data)
-        . = ALIGN(4);
-        *(.data.*)
-        . = ALIGN(4);
-        *(.ramtext)
-        . = ALIGN(4);
-        PROVIDE(_edata = .);
-    } > ram AT > flash
+   .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH
+    .ARM : {
+    __exidx_start = .;
+      *(.ARM.exidx*)
+      __exidx_end = .;
+    } >FLASH
 
-    .bss :
-    {
-        PROVIDE(_bss_start = .);
-        *(.bss)
-        . = ALIGN(4);
-        *(.bss.*)
-        . = ALIGN(4);
-        *(COMMON)
-        . = ALIGN(4);
-        PROVIDE(_bss_end = .);
-    } > ram    
+  .preinit_array     :
+  {
+    PROVIDE_HIDDEN (__preinit_array_start = .);
+    KEEP (*(.preinit_array*))
+    PROVIDE_HIDDEN (__preinit_array_end = .);
+  } >FLASH
+  .init_array :
+  {
+    PROVIDE_HIDDEN (__init_array_start = .);
+    KEEP (*(SORT(.init_array.*)))
+    KEEP (*(.init_array*))
+    PROVIDE_HIDDEN (__init_array_end = .);
+  } >FLASH
+  .fini_array :
+  {
+    PROVIDE_HIDDEN (__fini_array_start = .);
+    KEEP (*(.fini_array*))
+    KEEP (*(SORT(.fini_array.*)))
+    PROVIDE_HIDDEN (__fini_array_end = .);
+  } >FLASH
+
+  /* used by the startup to initialize data */
+  _sidata = .;
+
+  /* Initialized data sections goes into RAM, load LMA copy after code */
+  .data : 
+  {
+    . = ALIGN(4);
+    _sdata = .;        /* create a global symbol at data start */
+    *(.data)           /* .data sections */
+    *(.data*)          /* .data* sections */
+
+    . = ALIGN(4);
+    _edata = .;        /* define a global symbol at data end */
+  } >RAM AT> FLASH
+
+  /* Uninitialized data section */
+  . = ALIGN(4);
+  .bss :
+  {
+    /* This is used by the startup in order to initialize the .bss secion */
+    _sbss = .;         /* define a global symbol at bss start */
+    __bss_start__ = _sbss;
+    *(.bss)
+    *(.bss*)
+    *(COMMON)
+
+    . = ALIGN(4);
+    _ebss = .;         /* define a global symbol at bss end */
+    __bss_end__ = _ebss;
+  } >RAM
+
+  /* User_heap_stack section, used to check that there is enough RAM left */
+  ._user_heap_stack :
+  {
+    . = ALIGN(4);
+    PROVIDE ( end = . );
+    PROVIDE ( _end = . );
+    . = . + _Min_Heap_Size;
+    . = . + _Min_Stack_Size;
+    . = ALIGN(4);
+  } >RAM
+
+  /* MEMORY_bank1 section, code must be located here explicitly            */
+  /* Example: extern int foo(void) __attribute__ ((section (".mb1text"))); */
+  .memory_b1_text :
+  {
+    *(.mb1text)        /* .mb1text sections (code) */
+    *(.mb1text*)       /* .mb1text* sections (code)  */
+    *(.mb1rodata)      /* read-only data (constants) */
+    *(.mb1rodata*)
+  } >MEMORY_B1
+
+  /* Remove information from the standard libraries */
+  /DISCARD/ :
+  {
+    libc.a ( * )
+    libm.a ( * )
+    libgcc.a ( * )
+  }
+
+  .ARM.attributes 0 : { *(.ARM.attributes) }
 }
-
-PROVIDE(end = .);
-_end            = .;
-
-__heap_base__   = _end;
-__heap_end__    = __ram_end__;
